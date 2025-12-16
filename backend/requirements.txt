@@ -1,22 +1,19 @@
 # Auto Shorts Maker - Backend Dependencies
 # For Render Deployment (Cloud Mode - uses OpenAI API)
 
-# Core Framework
+# Core Framework - minimal dependencies
 fastapi==0.104.1
-uvicorn[standard]==0.24.0
+uvicorn==0.24.0
 python-multipart==0.0.6
 
 # AI/ML - OpenAI API for transcription
 openai==1.3.0
-# Note: faster-whisper removed for cloud deployment (requires Rust/native compilation)
-# Local development can install it separately: pip install faster-whisper
 
 # Video Processing
 yt-dlp==2023.11.16
 
 # Utilities
 python-dotenv==1.0.0
-pydantic==2.5.0
 
-# ASGI Server for Production
-gunicorn==21.2.0
+# Use pydantic v1 to avoid Rust compilation issues
+pydantic==1.10.13
