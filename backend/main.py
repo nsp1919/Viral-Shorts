@@ -7,11 +7,19 @@ app = FastAPI(title="Auto Shorts Maker API", version="1.0.0")
 
 # CORS Configuration
 origins = [
-    "http://localhost:3000",  # Next.js frontend
+    "http://localhost:3000",  # Next.js frontend (dev)
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3001",
+    # Production URLs - Update these after deployment
+    "https://*.vercel.app",  # Vercel deployments
+    "https://autoshorts.vercel.app",  # Main Vercel domain (update as needed)
 ]
+
+# Allow all origins in production for flexibility (can be restricted later)
+import os
+if os.getenv("RENDER"):
+    origins.append("*")
 
 app.add_middleware(
     CORSMiddleware,

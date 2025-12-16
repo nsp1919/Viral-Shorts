@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle (for non-adaptive icon support) -->
+    <path
+        android:fillColor="#8B5CF6"
+        android:pathData="M54,54m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0"/>
+    
+    <!-- Play/Video icon (simplified) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,36L44,72L72,54Z"/>
+    
+    <!-- Sparkle/Star decorations -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,30L38,34L42,34L39,37L40,41L36,38L32,41L33,37L30,34L34,34Z"
+        android:strokeWidth="0.5"
+        android:strokeColor="#FFFFFF"/>
+        
+    <path
+        android:fillColor="#EC4899"
+        android:pathData="M72,28L73.5,31L77,31L74.5,33.5L75.5,37L72,34.5L68.5,37L69.5,33.5L67,31L70.5,31Z"
+        android:strokeWidth="0.5"
+        android:strokeColor="#EC4899"/>
+</vector>
