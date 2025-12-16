@@ -5,6 +5,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Try to import faster-whisper, but make it optional for cloud deployment
+try:
+    from faster_whisper import WhisperModel
+    FASTER_WHISPER_AVAILABLE = True
+except ImportError:
+    FASTER_WHISPER_AVAILABLE = False
+    print("faster-whisper not available. Using OpenAI API only for transcription.")
+
 class Transcriber:
     def __init__(self):
         self.api_key = os.getenv("OPENAI_API_KEY")
@@ -14,9 +22,10 @@ class Transcriber:
         self.local_model = None
 
     def _get_local_model(self):
+        if not FASTER_WHISPER_AVAILABLE:
+            raise RuntimeError("faster-whisper is not installed. Please use OpenAI API or install faster-whisper locally.")
         if not self.local_model:
             print("Loading local Whisper model (tiny)... This may take a moment.")
-            from faster_whisper import WhisperModel
             # 'tiny' is fast and small. 'base' is better but larger.
             # Using 'int8' quantization for speed on CPU.
             # Upgraded to 'small' for better multi-language support (e.g. Telugu)
