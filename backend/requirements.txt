@@ -3,14 +3,18 @@
 
 # Core Framework
 fastapi
-uvicorn
+uvicorn[standard]
 python-multipart
 
 # AI/ML - OpenAI API for transcription
 openai
+google-generativeai
 
 # Video Processing
 yt-dlp
+
+# Social Media (optional - comment out if causing issues)
+# instagrapi
 
 # Utilities
 python-dotenv

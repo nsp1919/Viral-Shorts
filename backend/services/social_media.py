@@ -1,12 +1,21 @@
 import os
-from instagrapi import Client
 from pathlib import Path
+
+# Make instagrapi optional - it has complex dependencies
+try:
+    from instagrapi import Client
+    INSTAGRAPI_AVAILABLE = True
+except ImportError:
+    Client = None
+    INSTAGRAPI_AVAILABLE = False
 
 class SocialMediaManager:
     def __init__(self):
         self.insta_client = None
 
     def login_instagram(self, username, password):
+        if not INSTAGRAPI_AVAILABLE:
+            return False
         try:
             cl = Client()
             cl.login(username, password)
@@ -29,6 +38,9 @@ class SocialMediaManager:
             
         if not username or not password:
              return {"success": False, "error": "No credentials provided"}
+
+        if not INSTAGRAPI_AVAILABLE:
+            return {"success": False, "error": "Instagram sharing not available (instagrapi not installed)"}
 
         try:
             cl = Client()
