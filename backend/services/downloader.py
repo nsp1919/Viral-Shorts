@@ -41,44 +41,55 @@ class VideoDownloader:
         
         print(f"DEBUG: ydl_opts: {ydl_opts}")
 
-        try:
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(url, download=True)
-                
-                if info is None:
-                    raise Exception("yt-dlp extract_info returned None (download failed?)")
-                
-                file_id = str(uuid.uuid4()) # We defined this earlier, but let's be sure
-                # Re-check file_id variable scope if I edited around it (it was defined at top of method)
-                
-                # ... Logic to find file ...
-                # (Existing logic)
-                for file in self.download_dir.glob(f"*.mp4"): # Broader search to debug? No, rely on specific id if we can
-                     # Wait, file_id comes from top of method.
-                     pass 
+        # DEBUG: Print version to ensure update worked
+        import yt_dlp.version
+        print(f"DEBUG: yt-dlp version: {yt_dlp.version.__version__}")
 
-                # Revert to original finding logic but safer
-                # The original code searched for f"{file_id}.*"
-                
-                # The info dict has 'filename' but sometimes it's the temp file.
-                # The safest way with a predictable template is checking what exists.
-                # But since we used uuid, we can search for it.
-                
-                # Prepare filename might fail if extension isn't in info dict yet
-                # So we search for the file using the UUID we forced
-                # We need to use 'file_id' from the outer scope
-                
-                # Let's verify existing loop logic:
-                for file in self.download_dir.glob(f"{file_id}.*"):
-                    return str(file.absolute())
-                
-                # Fallback if somehow glob fails but prepare_filename works (unlikely if glob failed)
-                filename = ydl.prepare_filename(info)
-                return str(Path(filename).absolute())
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            print(f"Download failed: {e}")
-            raise
+        # Attempt 1: Force IPv4 (Common Fix)
+        # Attempt 2: Allow IPv6 (Fallback if IPv4 unavailable)
+        attempts = [
+            {"name": "Force IPv4", "opts": {**ydl_opts, 'force_ipv4': True, 'source_address': '0.0.0.0'}},
+            {"name": "Standard/IPv6", "opts": {**ydl_opts, 'force_ipv4': False}} # Remove source_address
+        ]
+        
+        # Clean up source_address from second attempt if it leaked from ydl_opts copy (it didn't, we used **ydl_opts)
+        # But wait, ydl_opts has source_address from my previous edit? 
+        # I should clean the base ydl_opts first.
+        if 'source_address' in attempts[1]['opts']:
+            del attempts[1]['opts']['source_address']
+
+        last_error = None
+
+        for attempt in attempts:
+            print(f"DEBUG: Trying download strategy: {attempt['name']}")
+            try:
+                with yt_dlp.YoutubeDL(attempt['opts']) as ydl:
+                    info = ydl.extract_info(url, download=True)
+                    
+                    if info is None:
+                        raise Exception("yt-dlp extract_info returned None")
+                    
+                    # Success! Find file
+                    file_id = str(uuid.uuid4()) # Only needed if we didn't define it outside loop?
+                    # logic relies on the file_id defined at start of method.
+                    # We generated file_id at line 16. It is constant for this call.
+                    
+                    # Check for file matching the UUID
+                    # Since we set 'outtmpl' with the ID, it should be there.
+                    for file in self.download_dir.glob(f"{file_id}.*"):
+                        return str(file.absolute())
+                    
+                    # Fallback
+                    filename = ydl.prepare_filename(info)
+                    return str(Path(filename).absolute())
+                    
+            except Exception as e:
+                print(f"Strategy {attempt['name']} failed: {e}")
+                last_error = e
+                # Continue to next attempt
+        
+        # If all failed
+        print(f"All download strategies failed. Last error: {last_error}")
+        raise last_error
 
 downloader = VideoDownloader()
