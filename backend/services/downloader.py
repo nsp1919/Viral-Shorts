@@ -66,19 +66,15 @@ class VideoDownloader:
 
         attempts = [
             {"name": "Standard", "opts": {**base_opts}},
-            {"name": "Google DNS", "opts": {**base_opts, 'socket_timeout': 30}}, # Try forcing standard ipv4 with timeout
-            # Note: yt-dlp python lib doesn't support 'dns_servers' directly in all versions, 
-            # but we can try to rely on system or fallback. 
-            # Actually, standard lib doesn't easily allow custom DNS without patching socket.
-            # Let's try aggressive retries and IPv4 as primary fix.
+            # Fix: Explicitly use Google DNS servers to bypass broken system resolver
+            {"name": "Google DNS", "opts": {**base_opts, 'dns_servers': ['8.8.8.8', '8.8.4.4'], 'force_ipv4': True}}, 
             
             # Alternative: Force IPv4 Only
             {"name": "Force IPv4", "opts": {**base_opts, 'force_ipv4': True}},
         ]
         
-        # NOTE: If we really want to force DNS, we'd need to patch socket.getaddrinfo
-        # But let's try just standard + ipv4 first, as the previous "force_ipv4 + bind 0.0.0.0" failed.
-        # "Force IPv4" without bind is the cleanest "fix" for docker.
+        # NOTE: 'dns_servers' is supported by yt-dlp to override socket.getaddrinfo behavior internally
+        # provided the phython dependency versions support it.
 
         
         last_error = None

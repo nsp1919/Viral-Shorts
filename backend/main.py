@@ -12,17 +12,28 @@ import subprocess
 async def startup_event():
     print("--- STARTUP NETWORK DIAGNOSTICS ---")
     try:
-        # Test 1: DNS Resolution
-        print(f"DNS Test google.com: {socket.gethostbyname('google.com')}")
-        print(f"DNS Test youtube.com: {socket.gethostbyname('youtube.com')}")
+        # Test 1: DNS Resolution (System)
+        print(f"DNS Test (System) google.com: {socket.gethostbyname('google.com')}")
         
-        # Test 2: Outbound Ping (if ping is installed)
+        # Test 2: DNS Resolution (Google 8.8.8.8) using dig/nslookup
         try:
-            # Ping google.com 3 times
+            print("Testing resolution via 8.8.8.8...")
+            # nslookup youtube.com 8.8.8.8
+            result_dns = subprocess.run(["nslookup", "youtube.com", "8.8.8.8"], capture_output=True, text=True)
+            print(f"DNS Test (8.8.8.8) youtube.com:\n{result_dns.stdout}")
+        except FileNotFoundError:
+            print("nslookup command not found")
+
+        # Test 3: System DNS for youtube (known failure point)
+        print(f"DNS Test (System) youtube.com: {socket.gethostbyname('youtube.com')}")
+        
+        # Test 4: Outbound Ping
+        try:
+             # Ping google.com 3 times
             result = subprocess.run(["ping", "-c", "3", "google.com"], capture_output=True, text=True)
             print(f"Ping google.com:\n{result.stdout}")
         except FileNotFoundError:
-            print("Ping command not found (skipped)")
+             print("Ping command not found (skipped)")
             
     except Exception as e:
         print(f"Startup Network Test Failed: {e}")
