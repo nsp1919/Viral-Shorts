@@ -145,8 +145,11 @@ class ContentAnalyzer:
         Fallback: Selects interesting parts based on position (evenly distributed).
         """
         duration = self.get_video_duration(video_path)
+        duration = self.get_video_duration(video_path)
         if not duration:
-            return []
+            print("Warning: Could not determine video duration. Assuming 10 minutes (600s) fallback to generate clips.")
+            duration = 600.0 # Fallback 10 mins
+
 
         clips = []
         
@@ -191,8 +194,13 @@ class ContentAnalyzer:
         if ffprobe_path.exists():
              ffprobe_cmd = str(ffprobe_path)
         else:
-             # Fallback to system path
-             ffprobe_cmd = "ffprobe"
+             # Check for ffprobe without extension (Linux/Mac)
+             ffprobe_path_no_ext = ffmpeg_path.parent / "ffprobe"
+             if ffprobe_path_no_ext.exists():
+                  ffprobe_cmd = str(ffprobe_path_no_ext)
+             else:
+                  # Fallback to system path
+                  ffprobe_cmd = "ffprobe"
 
         command = [
             ffprobe_cmd, 
