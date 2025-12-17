@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
     && rm -rf /var/lib/apt/lists/*
-&& rm -rf /var/lib/apt/lists/*
 
 # Setup user for Hugging Face Spaces
 RUN useradd -m -u 1000 user
