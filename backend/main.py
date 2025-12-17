@@ -11,7 +11,10 @@ origins = [
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3001",
-    # Production URLs - Update these after deployment
+    # Production URLs
+    "https://nspcreativehub-auto-shorts-backend.hf.space", # Hugging Face Space
+    "https://*.hf.space", # Wildcard for HF Spaces
+
     "https://*.vercel.app",  # Vercel deployments
     "https://autoshorts.vercel.app",  # Main Vercel domain (update as needed)
     "https://auto-shorts-mauve.vercel.app", # User's specific Vercel deployment
