@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Sparkles, Upload, Video, Zap } from "lucide-react";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -96,9 +97,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-border/40 py-8 text-center text-sm text-muted-foreground">
-        <p>© 2025 AutoShorts AI. Built for creators.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

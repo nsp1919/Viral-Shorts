@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Settings, Wand2, Rocket, Copy, Check } from "lucide-react";
 import ProcessingOverlay from "@/components/ProcessingOverlay";
+import Footer from "@/components/Footer";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -1081,6 +1082,9 @@ export default function UploadPage() {
                     </Dialog>
 
                 </div>
+
+                {/* Footer */}
+                <Footer />
             </div>
 
             {/* CSS Keyframe Animations */}
